@@ -39,7 +39,12 @@ const HeroSection = () => {
             <a href="#participate" className="text-sm font-medium hover:text-primary transition-colors">Участвовать</a>
             <a href="#contact" className="text-sm font-medium hover:text-primary transition-colors">Контакты</a>
           </nav>
-          <Button className="hidden md:inline-flex">Присоединиться</Button>
+          <Button 
+            className="hidden md:inline-flex"
+            onClick={() => document.getElementById('participate')?.scrollIntoView({ behavior: 'smooth' })}
+          >
+            Присоединиться
+          </Button>
         </div>
       </header>
 
@@ -54,11 +59,20 @@ const HeroSection = () => {
               Присоединяйтесь к студенческой инициативе по созданию комфортной и экологичной среды в нашем университете
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" className="text-lg px-8 py-6 hover-lift">
+              <Button 
+                size="lg" 
+                className="text-lg px-8 py-6 hover-lift"
+                onClick={() => document.getElementById('participate')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 <Icon name="UserPlus" size={20} className="mr-2" />
                 Стать участником
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="text-lg px-8 py-6"
+                onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+              >
                 <Icon name="Play" size={20} className="mr-2" />
                 Узнать больше
               </Button>

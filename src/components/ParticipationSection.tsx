@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,12 +10,20 @@ import { Badge } from '@/components/ui/badge';
 import Icon from '@/components/ui/icon';
 
 const ParticipationSection = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: ''
   });
+  const [contactData, setContactData] = useState({
+    name: '',
+    email: '',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isContactSubmitting, setIsContactSubmitting] = useState(false);
 
   const faqs = [
     {
@@ -39,11 +48,82 @@ const ParticipationSection = () => {
     }
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
-    alert('Спасибо за интерес! Мы свяжемся с вами в ближайшее время.');
-    setFormData({ name: '', email: '', phone: '', message: '' });
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/55c1dd41-6688-487b-8564-8428c37e2a99', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: '✅ Заявка отправлена!',
+          description: 'Спасибо за интерес! Мы свяжемся с вами в ближайшее время.',
+        });
+        setFormData({ name: '', email: '', phone: '', message: '' });
+      } else {
+        toast({
+          title: '❌ Ошибка',
+          description: data.error || 'Не удалось отправить заявку. Попробуйте позже.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: '❌ Ошибка сети',
+        description: 'Проверьте подключение к интернету и попробуйте снова.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleContactSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsContactSubmitting(true);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/55c1dd41-6688-487b-8564-8428c37e2a99', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: '✅ Сообщение отправлено!',
+          description: 'Мы ответим в течение 24 часов.',
+        });
+        setContactData({ name: '', email: '', message: '' });
+      } else {
+        toast({
+          title: '❌ Ошибка',
+          description: data.error || 'Не удалось отправить сообщение. Попробуйте позже.',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      toast({
+        title: '❌ Ошибка сети',
+        description: 'Проверьте подключение к интернету и попробуйте снова.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsContactSubmitting(false);
+    }
   };
 
   return (
@@ -109,9 +189,9 @@ const ParticipationSection = () => {
                       rows={4}
                     />
                   </div>
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full" disabled={isSubmitting}>
                     <Icon name="Send" size={18} className="mr-2" />
-                    Отправить заявку
+                    {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
                   </Button>
                 </form>
               </CardContent>
@@ -234,24 +314,44 @@ const ParticipationSection = () => {
               <CardDescription>Напишите нам, и мы ответим в течение 24 часов</CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="space-y-4">
+              <form onSubmit={handleContactSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="contact-name">Имя</Label>
-                    <Input id="contact-name" placeholder="Ваше имя" />
+                    <Input
+                      id="contact-name"
+                      placeholder="Ваше имя"
+                      value={contactData.name}
+                      onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
+                      required
+                    />
                   </div>
                   <div>
                     <Label htmlFor="contact-email">Email</Label>
-                    <Input id="contact-email" type="email" placeholder="your@email.com" />
+                    <Input
+                      id="contact-email"
+                      type="email"
+                      placeholder="your@email.com"
+                      value={contactData.email}
+                      onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
+                      required
+                    />
                   </div>
                 </div>
                 <div>
                   <Label htmlFor="contact-message">Сообщение</Label>
-                  <Textarea id="contact-message" placeholder="Ваше сообщение..." rows={5} />
+                  <Textarea
+                    id="contact-message"
+                    placeholder="Ваше сообщение..."
+                    rows={5}
+                    value={contactData.message}
+                    onChange={(e) => setContactData({ ...contactData, message: e.target.value })}
+                    required
+                  />
                 </div>
-                <Button type="submit" className="w-full">
+                <Button type="submit" className="w-full" disabled={isContactSubmitting}>
                   <Icon name="Mail" size={18} className="mr-2" />
-                  Отправить сообщение
+                  {isContactSubmitting ? 'Отправка...' : 'Отправить сообщение'}
                 </Button>
               </form>
 
