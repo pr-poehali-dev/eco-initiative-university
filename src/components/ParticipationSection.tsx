@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,6 +12,7 @@ import Icon from '@/components/ui/icon';
 
 const ParticipationSection = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -66,9 +68,12 @@ const ParticipationSection = () => {
       if (response.ok) {
         toast({
           title: '✅ Заявка отправлена!',
-          description: 'Спасибо за интерес! Мы свяжемся с вами в ближайшее время.',
+          description: 'Переходим к опросу...',
         });
         setFormData({ name: '', email: '', phone: '', message: '' });
+        setTimeout(() => {
+          navigate('/survey');
+        }, 1500);
       } else {
         toast({
           title: '❌ Ошибка',
