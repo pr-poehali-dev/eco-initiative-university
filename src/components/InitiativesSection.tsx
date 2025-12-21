@@ -5,6 +5,24 @@ import Icon from '@/components/ui/icon';
 const InitiativesSection = () => {
   const initiatives = [
     {
+      icon: 'Lightbulb',
+      title: 'Час "Выключи свет" в пустых аудиториях',
+      description: 'Еженедельная акция по мониторингу и выключению света в пустых аудиториях. Команды студентов соревнуются за максимальную экономию энергии с еженедельными отчётами',
+      impact: 'Экономия энергии и формирование привычки'
+    },
+    {
+      icon: 'MessageCircle',
+      title: 'Карта "Бесплатные вещи" в Telegram',
+      description: 'Telegram-бот для обмена ненужными вещами между студентами. Цифровая карта университета показывает, где можно забрать или оставить вещи даром',
+      impact: 'Быстрое перераспределение и осознанное потребление'
+    },
+    {
+      icon: 'ClipboardList',
+      title: 'Доска эко-объявлений "Отдам даром"',
+      description: 'Физическая доска в главном корпусе для объявлений об обмене и дарении вещей. Простое и наглядное решение, создающее место для спонтанного общения',
+      impact: 'Долгосрочная работа без вмешательства'
+    },
+    {
       icon: 'Droplets',
       title: 'Станции питьевой воды',
       description: 'Установка питьевых фонтанчиков в каждом корпусе университета для сокращения использования пластиковых бутылок',
@@ -39,11 +57,11 @@ const InitiativesSection = () => {
             Что мы предлагаем
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Четыре ключевые инициативы для создания экологичного кампуса
+            Семь ключевых инициатив для создания экологичного кампуса
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {initiatives.map((initiative, index) => (
             <Card key={index} className="hover-lift border-2 hover:border-primary transition-all duration-300">
               <CardHeader>
